@@ -1,322 +1,305 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>실시간 환율 계산기</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', 'Noto Sans KR', sans-serif;
-        }
-        /* 입력 시 스피너 버튼 숨기기 */
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실시간 환율 계산기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        }
+        /* 입력 시 스피너 버튼 숨기기 */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen py-12">
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-        
-        <header class="mb-6 text-center">
-            <h1 class="text-3xl font-bold text-gray-900">실시간 환율 계산기</h1>
-            <p id="updateTime" class="text-sm text-gray-500 mt-2">&nbsp;</p>
-        </header>
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        
+        <header class="mb-6 text-center">
+            <h1 class="text-3xl font-bold text-gray-900">실시간 환율 계산기</h1>
+            <p id="updateTime" class="text-sm text-gray-500 mt-2">&nbsp;</p>
+        </header>
 
-        <!-- 1. 상단: 원화 기준 환율 (정보 표시) -->
-        <section class="mb-6">
-            <h2 class="text-center text-sm font-semibold text-gray-600 mb-3">현재 원화 기준 환율</h2>
-            <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-center">
-                <div class="bg-gray-50 p-2 rounded-md">
-                    <span class="text-sm font-semibold">🇺🇸 USD</span>
-                    <span class="block text-xs text-gray-500" id="rate_USD_display">...</span>
-                </div>
-                <div class="bg-gray-50 p-2 rounded-md">
-                    <span class="text-sm font-semibold">🇪🇺 EUR</span>
-                    <span class="block text-xs text-gray-500" id="rate_EUR_display">...</span>
-                </div>
-                <div class="bg-gray-50 p-2 rounded-md">
-                    <span class="text-sm font-semibold">🇯🇵 JPY</span>
-                    <span class="block text-xs text-gray-500" id="rate_JPY_display">...</span>
-                </div>
-                <div class="bg-gray-50 p-2 rounded-md">
-                    <span class="text-sm font-semibold">🇨🇳 CNY</span>
-                    <span class="block text-xs text-gray-500" id="rate_CNY_display">...</span>
-                </div>
-            </div>
-        </section>
-        
-        <!-- 2. 중단: 외화 입력 및 원화 결과 -->
-        <section id="converter-section" class="border-t border-gray-200 pt-6">
-            <h2 class="text-center text-sm font-semibold text-gray-600 mb-3">외화 입력</h2>
-            <!-- 외화 입력 필드 -->
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <!-- (1) 미국 달러 (USD) -->
-                <div class="relative">
-                    <label for="USD" class="absolute left-3 top-2 text-xs font-semibold text-gray-500">
-                        미국 달러 (USD) 🇺🇸
-                    </label>
-                    <input type="number" id="USD" data-currency="USD" placeholder="0"
-                           class="currency-input w-full pl-4 pr-4 py-4 pt-7 text-xl font-bold bg-gray-50 rounded-lg border border-gray-200 text-right focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
+        <!-- 1. 상단: 원화 기준 환율 (정보 표시) -->
+        <section class="mb-6">
+            <h2 class="text-center text-sm font-semibold text-gray-600 mb-3">현재 원화 기준 환율</h2>
+            <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-center">
+                <div class="bg-gray-50 p-2 rounded-md">
+                    <span class="text-sm font-semibold">🇺🇸 USD</span>
+                    <span class="block text-xs text-gray-500" id="rate_USD_display">...</span>
+                </div>
+                <div class="bg-gray-50 p-2 rounded-md">
+                    <span class="text-sm font-semibold">🇪🇺 EUR</span>
+                    <span class="block text-xs text-gray-500" id="rate_EUR_display">...</span>
+                </div>
+                <div class="bg-gray-50 p-2 rounded-md">
+                    <span class="text-sm font-semibold">🇯🇵 JPY</span>
+                    <span class="block text-xs text-gray-500" id="rate_JPY_display">...</span>
+                </div>
+                <div class="bg-gray-50 p-2 rounded-md">
+                    <span class="text-sm font-semibold">🇨🇳 CNY</span>
+                    <span class="block text-xs text-gray-500" id="rate_CNY_display">...</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 2. 중단: 외화 입력 및 원화 결과 -->
+        <section id="converter-section" class="border-t border-gray-200 pt-6">
+            <h2 class="text-center text-sm font-semibold text-gray-600 mb-3">외화 입력</h2>
+            <!-- 외화 입력 필드 -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <!-- (1) 미국 달러 (USD) -->
+                <div class="relative">
+                    <label for="USD" class="absolute left-3 top-2 text-xs font-semibold text-gray-500">
+                        미국 달러 (USD) 🇺🇸
+                    </label>
+                    <input type="number" id="USD" data-currency="USD" placeholder="0"
+                           class="currency-input w-full pl-4 pr-4 py-4 pt-7 text-xl font-bold bg-gray-50 rounded-lg border border-gray-200 text-right focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
 
-                <!-- (2) 유로 (EUR) -->
-                <div class="relative">
-                    <label for="EUR" class="absolute left-3 top-2 text-xs font-semibold text-gray-500">
-                        유로 (EUR) 🇪🇺
-                    </label>
-                    <input type="number" id="EUR" data-currency="EUR" placeholder="0"
-                           class="currency-input w-full pl-4 pr-4 py-4 pt-7 text-xl font-bold bg-gray-50 rounded-lg border border-gray-200 text-right focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
+                <!-- (2) 유로 (EUR) -->
+                <div class="relative">
+                    <label for="EUR" class="absolute left-3 top-2 text-xs font-semibold text-gray-500">
+                        유로 (EUR) 🇪🇺
+                    </label>
+                    <input type="number" id="EUR" data-currency="EUR" placeholder="0"
+                           class="currency-input w-full pl-4 pr-4 py-4 pt-7 text-xl font-bold bg-gray-50 rounded-lg border border-gray-200 text-right focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
 
-                <!-- (3) 일본 엔 (JPY) -->
-                <div class="relative">
-                    <label for="JPY" class="absolute left-3 top-2 text-xs font-semibold text-gray-500">
-                        일본 엔 (JPY) 🇯🇵
-                    </label>
-                    <input type="number" id="JPY" data-currency="JPY" placeholder="0"
-                           class="currency-input w-full pl-4 pr-4 py-4 pt-7 text-xl font-bold bg-gray-50 rounded-lg border border-gray-200 text-right focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
+                <!-- (3) 일본 엔 (JPY) -->
+                <div class="relative">
+                    <label for="JPY" class="absolute left-3 top-2 text-xs font-semibold text-gray-500">
+                        일본 엔 (JPY) 🇯🇵
+                    </label>
+                    <input type="number" id="JPY" data-currency="JPY" placeholder="0"
+                           class="currency-input w-full pl-4 pr-4 py-4 pt-7 text-xl font-bold bg-gray-50 rounded-lg border border-gray-200 text-right focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
 
-                <!-- (4) 중국 위안 (CNY) -->
-                <div class="relative">
-                    <label for="CNY" class="absolute left-3 top-2 text-xs font-semibold text-gray-500">
-                        중국 위안 (CNY) 🇨🇳
-                    </label>
-                    <input type="number" id="CNY" data-currency="CNY" placeholder="0"
-                           class="currency-input w-full pl-4 pr-4 py-4 pt-7 text-xl font-bold bg-gray-50 rounded-lg border border-gray-200 text-right focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-            </div>
+                <!-- (4) 중국 위안 (CNY) -->
+                <div class="relative">
+                    <label for="CNY" class="absolute left-3 top-2 text-xs font-semibold text-gray-500">
+                        중국 위안 (CNY) 🇨🇳
+                    </label>
+                    <input type="number" id="CNY" data-currency="CNY" placeholder="0"
+                           class="currency-input w-full pl-4 pr-4 py-4 pt-7 text-xl font-bold bg-gray-50 rounded-lg border border-gray-200 text-right focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+            </div>
 
-            <!-- 원화 결과 표시 -->
-            <div class="text-center mt-6">
-                <label class="text-sm font-semibold text-gray-600">원화 환산 금액 🇰🇷</label>
-                <div class="text-3xl font-bold text-blue-600 mt-1">
-                    <span id="krw_result_value">0</span>
-                    <span class="text-2xl font-medium text-gray-700 ml-1">원</span>
-                </div>
-            </div>
-        </section>
+            <!-- 원화 결과 표시 -->
+            <div class="text-center mt-6">
+                <label class="text-sm font-semibold text-gray-600">원화 환산 금액 🇰🇷</label>
+                <div class="text-3xl font-bold text-blue-600 mt-1">
+                    <span id="krw_result_value">0</span>
+                    <span class="text-2xl font-medium text-gray-700 ml-1">원</span>
+                </div>
+            </div>
+        </section>
 
-        <!-- 3. 하단: 원화 기준 요약 -->
-        <div id="summary" class="mt-6 border-t border-gray-200 pt-4 text-center space-y-2 hidden">
-            <h3 class="text-base font-semibold text-gray-700">금액 요약</h3>
-            <div class="grid grid-cols-2 gap-x-8 gap-y-2 pt-2">
-                <p class="text-left text-sm text-gray-700">🇺🇸 USD: <span class="font-bold float-right" id="summary_USD">0.00</span></p>
-                <p class="text-left text-sm text-gray-700">🇪🇺 EUR: <span class="font-bold float-right" id="summary_EUR">0.00</span></p>
-                <p class="text-left text-sm text-gray-700">🇯🇵 JPY: <span class="font-bold float-right" id="summary_JPY">0.00</span></p>
-                <p class="text-left text-sm text-gray-700">🇨🇳 CNY: <span class="font-bold float-right" id="summary_CNY">0.00</span></p>
-            </div>
-        </div>
+        <!-- 3. 하단: 원화 기준 요약 -->
+        <div id="summary" class="mt-6 border-t border-gray-200 pt-4 text-center space-y-2 hidden">
+            <h3 class="text-base font-semibold text-gray-700">금액 요약</h3>
+            <div class="grid grid-cols-2 gap-x-8 gap-y-2 pt-2">
+                <p class="text-left text-sm text-gray-700">🇺🇸 USD: <span class="font-bold float-right" id="summary_USD">0.00</span></p>
+                <p class="text-left text-sm text-gray-700">🇪🇺 EUR: <span class="font-bold float-right" id="summary_EUR">0.00</span></p>
+                <p class="text-left text-sm text-gray-700">🇯🇵 JPY: <span class="font-bold float-right" id="summary_JPY">0.00</span></p>
+                <p class="text-left text-sm text-gray-700">🇨🇳 CNY: <span class="font-bold float-right" id="summary_CNY">0.00</span></p>
+            </div>
+        </div>
 
-    </div>
+    </div>
 
-    <script>
-        const API_URL = 'https://api.frankfurter.app/latest?to=KRW,USD,EUR,JPY,CNY';
-        const updateTimeEl = document.getElementById('updateTime');
-        const inputs = Array.from(document.getElementsByClassName('currency-input'));
-        
-        // 중단 (원화 결과)
-        const krwResultValueEl = document.getElementById('krw_result_value');
-        
-        // 하단 (요약 섹션)
-        const summaryEl = document.getElementById('summary');
-        const summaryUSD = document.getElementById('summary_USD');
-        const summaryEUR = document.getElementById('summary_EUR');
-        const summaryJPY = document.getElementById('summary_JPY');
-        const summaryCNY = document.getElementById('summary_CNY');
-        
-        let rates = {}; // 환율 정보 저장 객체
-        let baseCurrency = 'EUR'; // API 기본값은 EUR
-        let isUpdating = false; // 무한 루프 방지 플래그
+    <script>
+        const API_URL = 'https://api.frankfurter.app/latest?to=KRW,USD,EUR,JPY,CNY';
+        const updateTimeEl = document.getElementById('updateTime');
+        const inputs = Array.from(document.getElementsByClassName('currency-input'));
+        
+        // 중단 (원화 결과)
+        const krwResultValueEl = document.getElementById('krw_result_value');
+        
+        // 하단 (요약 섹션)
+        const summaryEl = document.getElementById('summary');
+        const summaryUSD = document.getElementById('summary_USD');
+        const summaryEUR = document.getElementById('summary_EUR');
+        const summaryJPY = document.getElementById('summary_JPY');
+        const summaryCNY = document.getElementById('summary_CNY');
+        
+        let rates = {}; // 환율 정보 저장 객체
+        let baseCurrency = 'EUR'; // API 기본값은 EUR
+        let isUpdating = false; // 무한 루프 방지 플래그
 
-        /**
-         * 환율 정보를 API로부터 가져와서 저장합니다.
-         */
-        async function fetchRates() {
-            try {
-                updateTimeEl.textContent = '환율 정보 로딩 중...';
-                const response = await fetch(API_URL);
-                if (!response.ok) {
-                    throw new Error(`API 요청 실패: ${response.status}`);
-                }
-                const data = await response.json();
+        /**
+         * 환율 정보를 API로부터 가져와서 저장합니다.
+         */
+        async function fetchRates() {
+            try {
+                updateTimeEl.textContent = '환율 정보 로딩 중...';
+                const response = await fetch(API_URL);
+                const data = await response.json();
 
-                rates = data.rates;
-                rates[data.base] = 1.0; 
-                baseCurrency = data.base;
+                rates = data.rates;
+                rates[data.base] = 1.0; 
+                baseCurrency = data.base;
 
-                // 기준 시간 표시
-                const date = new Date(data.date);
-                updateTimeEl.textContent = `${date.toLocaleString('ko-KR')} 기준 환율`;
-                
-                // 1. 상단: 원화(KRW) 기준 환율 계산 및 표시
-                const krwRate = rates.KRW; // 1 EUR 대비 KRW
-                if (!krwRate || !rates.USD || !rates.EUR || !rates.JPY || !rates.CNY) {
-                    throw new Error("필수 환율 정보(KRW)가 없습니다.");
-                }
-                
-                document.getElementById('rate_USD_display').textContent = `1 USD = ${(krwRate / rates.USD).toFixed(2)} 원`;
-                document.getElementById('rate_EUR_display').textContent = `1 EUR = ${(krwRate / rates.EUR).toFixed(2)} 원`;
-                document.getElementById('rate_JPY_display').textContent = `100 JPY = ${((krwRate / rates.JPY) * 100).toFixed(2)} 원`;
-                document.getElementById('rate_CNY_display').textContent = `1 CNY = ${(krwRate / rates.CNY).toFixed(2)} 원`;
-                
-                console.log('환율 정보 로드 성공:', rates);
-            } catch (error)
- {
-                console.error('환율 정보 로딩 실패:', error);
-                updateTimeEl.textContent = '환율 정보 로딩에 실패했습니다.';
-            }
-        }
+                // 기준 시간 표시
+                const date = new Date(data.date);
+                updateTimeEl.textContent = `${date.toLocaleString('ko-KR')} 기준 환율`;
+                
+                // 1. 상단: 원화(KRW) 기준 환율 계산 및 표시
+                const krwRate = rates.KRW; // 1 EUR 대비 KRW
+                document.getElementById('rate_USD_display').textContent = `1 USD = ${(krwRate / rates.USD).toFixed(2)} 원`;
+                document.getElementById('rate_EUR_display').textContent = `1 EUR = ${(krwRate / rates.EUR).toFixed(2)} 원`;
+                document.getElementById('rate_JPY_display').textContent = `100 JPY = ${((krwRate / rates.JPY) * 100).toFixed(2)} 원`;
+                document.getElementById('rate_CNY_display').textContent = `1 CNY = ${(krwRate / rates.CNY).toFixed(2)} 원`;
+                
+                console.log('환율 정보 로드 성공:', rates);
+            } catch (error)
+ {
+                console.error('환율 정보 로딩 실패:', error);
+                updateTimeEl.textContent = '환율 정보 로딩에 실패했습니다.';
+            }
+        }
 
-        /**
-         * 숫자를 보기 좋게 포맷팅합니다.
-         * (KRW, JPY는 소수점 0자리, 나머지는 2자리)
-         */
-        function formatNumber(amount, currency) {
-            if (amount === 0 || isNaN(amount)) {
-                return (currency === 'KRW' || currency === 'JPY') ? '0' : '0.00';
-            }
-            
-            const options = {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 0
-            };
-            
-            if (currency === 'KRW' || currency === 'JPY') {
-                options.maximumFractionDigits = 0;
-            }
+        /**
+         * 숫자를 보기 좋게 포맷팅합니다.
+         * (KRW, JPY는 소수점 0자리, 나머지는 2자리)
+         */
+        function formatNumber(amount, currency) {
+            if (amount === 0 || isNaN(amount)) {
+                return (currency === 'KRW' || currency === 'JPY') ? '0' : '0.00';
+            }
+            
+            const options = {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 0
+            };
+            
+            if (currency === 'KRW' || currency === 'JPY') {
+                options.maximumFractionDigits = 0;
+            }
 
-            // toFixed로 반올림 처리
-            let fixedAmount = amount.toFixed(options.maximumFractionDigits);
-            
-            // 소수점 2자리로 강제 포맷팅 후 .00을 제거하는 로직
-            if (options.maximumFractionDigits === 2) {
-                 fixedAmount = (Math.round(amount * 100) / 100).toString();
-                 // .이 없고, 0이 아닐 때 (정수일 때)
-                 if (fixedAmount.indexOf('.') === -1 && amount !== 0) {
-                     // 10.50 같은 케이스 처리 (10.5로 끝나는 경우)
-                     if (amount.toString().match(/\.\d{1}$/)) {
-                         fixedAmount += "0";
-                     } else {
-                         // 정수 10 -> 10.00
-                         fixedAmount += ".00";
-                     }
-                 } else if (fixedAmount.match(/\.\d{1}$/)) { // 10.5 -> 10.50
-                    fixedAmount += "0";
-                 }
-            } else {
-                 fixedAmount = Math.round(amount).toString();
-            }
-            
-            return fixedAmount;
-        }
+            // toFixed로 반올림 처리
+            let fixedAmount = amount.toFixed(options.maximumFractionDigits);
+            
+            // 소수점 2자리로 강제 포맷팅 후 .00을 제거하는 로직
+            if (options.maximumFractionDigits === 2) {
+                 fixedAmount = (Math.round(amount * 100) / 100).toString();
+                 // .이 없고, 0이 아닐 때 (정수일 때)
+                 if (fixedAmount.indexOf('.') === -1 && amount !== 0) {
+                     // 10.50 같은 케이스 처리 (10.5로 끝나는 경우)
+                     if (amount.toString().match(/\.\d{1}$/)) {
+                         fixedAmount += "0";
+                     } else {
+                         // 정수 10 -> 10.00
+                         fixedAmount += ".00";
+                     }
+                 } else if (fixedAmount.match(/\.\d{1}$/)) { // 10.5 -> 10.50
+                    fixedAmount += "0";
+                 }
+            } else {
+                 fixedAmount = Math.round(amount).toString();
+            }
+            
+            return fixedAmount;
+        }
 
-        /**
-         * (중단) 외화 -> 원화 환산
-         * @param {number} amount - 입력된 외화 금액
-         * @param {string} fromCurrency - 입력된 통화 (예: 'USD')
-         */
-        function updateKRW(amount, fromCurrency) {
-            // 환율 정보가 아직 로드되지 않았다면 계산 중지
-            if (Object.keys(rates).length === 0) {
-                return;
-            }
-            
-            if (isUpdating) return;
-            isUpdating = true;
-            
-            // 1. 다른 3개의 입력창 클리어
-            inputs.forEach(input => {
-                if (input.dataset.currency !== fromCurrency) {
-                    input.value = '';
-                }
-            });
-            
-            if (!amount || isNaN(amount) || amount === 0) {
-                // 입력값이 0이거나 없으면 모든 하단부 초기화
-                krwResultValueEl.textContent = '0';
-                updateSummary(0);
-                isUpdating = false;
-                return;
-            }
+        /**
+         * (중단) 외화 -> 원화 환산
+         * @param {number} amount - 입력된 외화 금액
+         * @param {string} fromCurrency - 입력된 통화 (예: 'USD')
+         */
+        function updateKRW(amount, fromCurrency) {
+            if (isUpdating) return;
+            isUpdating = true;
+            
+            // 1. 다른 3개의 입력창 클리어
+            inputs.forEach(input => {
+                if (input.dataset.currency !== fromCurrency) {
+                    input.value = '';
+                }
+            });
+            
+            if (!amount || isNaN(amount) || amount === 0) {
+                // 입력값이 0이거나 없으면 모든 하단부 초기화
+                krwResultValueEl.textContent = '0';
+                updateSummary(0);
+                isUpdating = false;
+                return;
+            }
 
-            // 2. 원화 환산 (중단)
-            const amountInBase = amount / rates[fromCurrency];
-            const krwValue = amountInBase * rates.KRW;
-            krwResultValueEl.textContent = Math.round(krwValue).toLocaleString('ko-KR');
-            
-            // 3. 하단 요약 업데이트
-            updateSummary(krwValue);
-            
-            isUpdating = false;
-        }
+            // 2. 원화 환산 (중단)
+            const amountInBase = amount / rates[fromCurrency];
+            const krwValue = amountInBase * rates.KRW;
+            krwResultValueEl.textContent = Math.round(krwValue).toLocaleString('ko-KR');
+            
+            // 3. 하단 요약 업데이트
+            updateSummary(krwValue);
+            
+            isUpdating = false;
+        }
 
-        /**
-         * (하단) 원화 기준 요약 섹션을 업데이트합니다.
-         * @param {number} krwValue - 중단에 표시된 원화 금액
-         */
-        function updateSummary(krwValue) {
-            // 환율 정보가 아직 로드되지 않았다면 계산 중지
-            if (Object.keys(rates).length === 0) {
-                return;
-            }
+        /**
+         * (하단) 원화 기준 요약 섹션을 업데이트합니다.
+         * @param {number} krwValue - 중단에 표시된 원화 금액
+         */
+        function updateSummary(krwValue) {
+            if (krwValue === 0) {
+                summaryEl.classList.add('hidden');
+                return;
+            }
+            
+            summaryEl.classList.remove('hidden');
+            
+            // 원화를 Base 통화(EUR)로 변환
+            const krwInBase = krwValue / rates.KRW;
+            
+            // Base 통화를 기준으로 다른 외화들 계산
+            summaryUSD.textContent = formatNumber(krwInBase * rates.USD, 'USD');
+            summaryEUR.textContent = formatNumber(krwInBase * rates.EUR, 'EUR');
+            summaryJPY.textContent = formatNumber(krwInBase * rates.JPY, 'JPY');
+            summaryCNY.textContent = formatNumber(krwInBase * rates.CNY, 'CNY');
+        }
 
-            if (krwValue === 0) {
-                summaryEl.classList.add('hidden');
-                return;
-            }
-            
-            summaryEl.classList.remove('hidden');
-            
-            // 원화를 Base 통화(EUR)로 변환
-            const krwInBase = krwValue / rates.KRW;
-            
-            // Base 통화를 기준으로 다른 외화들 계산
-            summaryUSD.textContent = formatNumber(krwInBase * rates.USD, 'USD');
-            summaryEUR.textContent = formatNumber(krwInBase * rates.EUR, 'EUR');
-            summaryJPY.textContent = formatNumber(krwInBase * rates.JPY, 'JPY');
-            summaryCNY.textContent = formatNumber(krwInBase * rates.CNY, 'CNY');
-        }
+        // --- 이벤트 리스너 설정 ---
 
-        // --- 이벤트 리스너 설정 ---
+        // 페이지 로드 시 환율 정보 가져오기
+        window.addEventListener('load', fetchRates);
 
-        // 페이지 로드 시 환율 정보 가져오기
-        window.addEventListener('load', fetchRates);
+        // 4개 외화 입력창에 'input' 이벤트 리스너 추가
+        inputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                const amount = parseFloat(e.target.value) || 0;
+                const currency = e.target.dataset.currency;
+                
+                updateKRW(amount, currency);
+            });
+            
+            // 숫자가 아닌 값 입력 방지 (소수점 허용)
+            input.addEventListener('keydown', (e) => {
+                if (!((e.key >= '0' && e.key <= '9') || 
+                      e.key === 'Backspace' || e.key === 'Tab' || e.key === 'Enter' || 
+                      e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Delete' ||
+                      (e.key === '.' && !e.target.value.includes('.')))) {
+                    
+                    if (!e.ctrlKey && !e.metaKey) { 
+                        e.preventDefault();
+                    }
+                }
+            });
 
-        // 4개 외화 입력창에 'input' 이벤트 리스너 추가
-        inputs.forEach(input => {
-            input.addEventListener('input', (e) => {
-                const amount = parseFloat(e.target.value) || 0;
-                const currency = e.target.dataset.currency;
-                
-                updateKRW(amount, currency);
-            });
-            
-            // 숫자가 아닌 값 입력 방지 (소수점 허용)
-            input.addEventListener('keydown', (e) => {
-                if (!((e.key >= '0' && e.key <= '9') || 
-                      e.key === 'Backspace' || e.key === 'Tab' || e.key === 'Enter' || 
-                      e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Delete' ||
-                      (e.key === '.' && !e.target.value.includes('.')))) {
-                    
-                    if (!e.ctrlKey && !e.metaKey) { 
-                        e.preventDefault();
-                    }
-                }
-            });
+            // 입력창 클릭 시 내용 전체 선택
+            input.addEventListener('focus', (e) => {
+                e.target.select();
+            });
+        });
 
-            // 입력창 클릭 시 내용 전체 선택
-            input.addEventListener('focus', (e) => {
-                e.target.select();
-            });
-        });
-
-    </script>
+    </script>
 </body>
-</html>
+</html>'
